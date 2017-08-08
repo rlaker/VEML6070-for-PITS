@@ -892,7 +892,6 @@ int main(void)
 			return 1;
 		}
 	}
-
 	if (Config.EnableVEML6070)
 	{
 		if (pthread_create(&VEML6070Thread, NULL, VEML6070Loop, &GPS))

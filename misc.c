@@ -782,7 +782,7 @@ int BuildSentence(unsigned char *TxLine, int Channel, struct TGPS *GPS)
 	static FILE *ExternalFile=NULL;
 	static int FirstTime=1;
 	int LoRaChannel;
-	char TimeBuffer[12], ExtraFields1[20], ExtraFields2[20], ExtraFields3[20], ExtraFields4[64], ExtraFields5[32], ExtraFields6[32], *ExtraFields7;
+	char TimeBuffer[12], ExtraFields1[20], ExtraFields2[20], ExtraFields3[20], ExtraFields4[64], ExtraFields5[32], ExtraFields6[32], ExtraFields8[32], *ExtraFields7;
 	
 	if (FirstTime)
 	{
@@ -825,7 +825,7 @@ int BuildSentence(unsigned char *TxLine, int Channel, struct TGPS *GPS)
 	// BMP Pressure/Temperature/Humidity, if available
 	if (Config.EnableBME280)
 	{
-		sprintf(ExtraFields2, ",%.1f,%.0f,%0.1f", GPS->BMP180Temperature, GPS->Pressure, GPS->Humidity);
+	sprintf(ExtraFields2, ",%.1f,%0.2f,%0.1f", GPS->BMP180Temperature, GPS->Pressure, GPS->Humidity);
 	}
 	else if (Config.EnableBMP085)
 	{
@@ -840,7 +840,8 @@ int BuildSentence(unsigned char *TxLine, int Channel, struct TGPS *GPS)
 
 	if (Config.EnableVEML6070)
 	{
-		sprintf(ExtraFields8, ",%.1f", GPS->UV);
+		sprintf(ExtraFields8, ",%.1f", GPS->UV_data);
+		printf("test");
 	}
 	
 	// Landing Prediction, if enabled
@@ -930,7 +931,7 @@ int BuildSentence(unsigned char *TxLine, int Channel, struct TGPS *GPS)
 			ExtraFields7 = misc_get_sentence_fields(GPS);
 		#endif
 		
-		sprintf((char *)TxLine, "$$%s,%d,%s,%7.5lf,%7.5lf,%5.5" PRId32  ",%d,%d,%d,%3.1f%s%s%s%s%s%s%s%s",
+		sprintf((char *)TxLine, "$$%s,%d,%s,%7.5lf,%7.5lf,%5.5" PRId32  ",%d,%d,%d,%3.1f%s%s%s%s%s%s%s%s%s",
 				Config.Channels[Channel].PayloadID,
 				Config.Channels[Channel].SentenceCounter,
 				TimeBuffer,
@@ -948,6 +949,7 @@ int BuildSentence(unsigned char *TxLine, int Channel, struct TGPS *GPS)
 				ExternalFields,
 				ExtraFields5,
 				ExtraFields6,
+				ExtraFields8,
 				ExtraFields7);
 	}
 	
